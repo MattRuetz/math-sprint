@@ -81,7 +81,6 @@ const updateBestScore = () => {
   localStorage.setItem('bestScores', JSON.stringify(bestScoreArray));
 }
 
-
 // Reset Game
 const playAgain = () => {
   gamePage.addEventListener('click', startTimer);
@@ -93,17 +92,16 @@ const playAgain = () => {
   playAgainBtn.hidden = true;
 }
 
-
 // Show Scores Page
 const showScorePage = () => {
   // Show Play Again button after 1 seocnd pause (avoid skipping page)
+  gamePage.hidden = true;
+  scorePage.hidden = false;
   setTimeout(() => {
     playAgainBtn.hidden = false;
   }, 1000);
-  gamePage.hidden = true;
-  scorePage.hidden = false;
+  
 }
-
 
 // Format and show scored in DOM
 const scoresToDOM = () => {
@@ -118,7 +116,6 @@ const scoresToDOM = () => {
   itemContainer.scrollTo({top: 0, behavior: 'instant'});
   showScorePage();
 }
-
 
 // Stop time, check results, go to score pg
 const checkTime = () => {
@@ -249,13 +246,20 @@ function populateGamePage() {
 
 // Display: 3, 2, 1, GO!
 const countdownStart = () => {
-  let countArr = ['3', '2', '1', 'GO!'];
+  let count = 3;
 
-  for (let i = 0; i< 4; ++i) { //My solution to a counter
-    setTimeout(() => {
-      countdown.textContent = countArr[i];
-    }, 1000*(i+1));
-  }
+  countdown.textContent = count;
+  const timeCountdown = setInterval(()=> {
+    count--;
+    if(count === 0) {
+      countdown.textContent = 'GO!'
+    } else if (count < 0) {
+      showGamePage();
+      clearInterval(timeCountdown);
+    } else {
+      countdown.textContent = count;
+    }
+  }, 1000);
 }
 
 // Go from Splash Page -> Countdown Page
